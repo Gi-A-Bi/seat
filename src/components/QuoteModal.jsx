@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Sparkles, RefreshCw, Play, X, Heart, MessageSquareQuote } from 'lucide-react';
+import { RefreshCw, Play, X, Heart } from 'lucide-react';
 import { getRandomQuote } from '../utils/quotes';
 
 export default function QuoteModal({
@@ -15,17 +15,20 @@ export default function QuoteModal({
   if (!isOpen || !currentQuote) return null;
 
   return (
-    <div className="modal-backdrop">
-      <div className="quote-modal-card">
-        {/* 상단 닫기 */}
-        <button className="modal-close-btn" onClick={onClose}>
-          <X className="w-5 h-5" />
-        </button>
+    <div className="quote-stage">
+      {/* 무대 조명 */}
+      <div className="quote-stage-light" aria-hidden="true" />
+      <div className="quote-stage-vignette" aria-hidden="true" />
 
+      <button className="quote-stage-close" onClick={onClose} title="닫기">
+        <X className="w-5 h-5" />
+      </button>
+
+      <div className="quote-stage-inner">
         {/* 뱃지 */}
         <div className="quote-badge-container">
           <span className="quote-badge">
-            <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500" />
+            <Heart className="w-4 h-4 fill-current" />
             <span>오늘의 자리 배치 생각 나눔</span>
           </span>
           {currentQuote.tag && (
@@ -33,10 +36,8 @@ export default function QuoteModal({
           )}
         </div>
 
-        {/* 본문 멘트 */}
+        {/* 본문 멘트 — 화면 가운데를 가득 채우는 타이틀 카드 */}
         <div className="quote-content-box">
-          <MessageSquareQuote className="quote-icon-decor" />
-
           {customEditing ? (
             <div className="custom-quote-form">
               <textarea
@@ -47,13 +48,13 @@ export default function QuoteModal({
                 placeholder="학생들에게 전하고 싶은 교훈이나 따뜻한 한마디를 입력하세요."
               />
               <div className="custom-quote-actions">
-                <button 
+                <button
                   className="btn-sm btn-secondary"
                   onClick={() => setCustomEditing(false)}
                 >
                   취소
                 </button>
-                <button 
+                <button
                   className="btn-sm btn-primary"
                   onClick={() => {
                     if (customQuoteText.trim()) {
@@ -73,11 +74,14 @@ export default function QuoteModal({
             </div>
           ) : (
             <>
-              <h2 className="quote-main-text">
-                "{currentQuote.quote}"
+              {/* key 로 멘트가 바뀔 때마다 등장 애니메이션 재생 */}
+              <h2 className="quote-main-text" key={currentQuote.id}>
+                <span className="quote-mark quote-mark-open" aria-hidden="true">“</span>
+                {currentQuote.quote}
+                <span className="quote-mark quote-mark-close" aria-hidden="true">”</span>
               </h2>
               {currentQuote.subtext && (
-                <p className="quote-sub-text">
+                <p className="quote-sub-text" key={`sub-${currentQuote.id}`}>
                   {currentQuote.subtext}
                 </p>
               )}
@@ -85,10 +89,12 @@ export default function QuoteModal({
           )}
         </div>
 
+        <div className="quote-divider" aria-hidden="true" />
+
         {/* 버튼 영역 */}
         <div className="quote-modal-footer">
           <div className="quote-footer-left">
-            <button 
+            <button
               className="btn-secondary btn-icon-text"
               onClick={() => {
                 const next = getRandomQuote(currentQuote.id);
@@ -99,7 +105,7 @@ export default function QuoteModal({
               <RefreshCw className="w-4 h-4" />
               <span>다른 멘트 보기</span>
             </button>
-            <button 
+            <button
               className="btn-link"
               onClick={() => {
                 setCustomQuoteText(currentQuote.quote);
@@ -111,14 +117,14 @@ export default function QuoteModal({
           </div>
 
           <div className="quote-footer-right">
-            <button 
+            <button
               className="btn-primary btn-start-reveal"
               onClick={() => {
                 onClose();
                 onStartShuffle();
               }}
             >
-              <Play className="w-4 h-4 fill-current" />
+              <Play className="w-5 h-5 fill-current" />
               <span>두근두근 배치 시작!</span>
             </button>
           </div>

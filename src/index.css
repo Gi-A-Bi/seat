@@ -1500,142 +1500,275 @@ input, select, textarea {
 }
 
 /* =========================================================
-   Quote Modal (Pre-reveal Dramatic Presentation)
+   Quote Stage — 배치 직전 전체화면 타이틀 카드
+   (교실 빔프로젝터로 띄우는 화면이라 창이 아니라 무대로 구성)
    ========================================================= */
 
-.quote-modal-card {
-  background: var(--surface-1);
-  border-radius: var(--radius-xl);
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-  width: 100%;
-  max-width: 620px;
-  padding: 36px 32px 28px;
-  position: relative;
-  overflow: hidden;
+.quote-stage {
+  position: fixed;
+  inset: 0;
+  z-index: 150;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background: radial-gradient(85% 62% at 50% 40%, #15151f 0%, #0a0a11 46%, #040407 100%);
+  animation: quoteStageIn 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes quoteStageIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* 위에서 내려오는 스포트라이트 */
+.quote-stage-light {
+  position: fixed;
+  top: -30%;
+  left: 50%;
+  width: 120%;
+  height: 110%;
+  transform: translateX(-50%);
+  pointer-events: none;
+  background: radial-gradient(42% 46% at 50% 0%, rgba(233, 196, 106, 0.16) 0%, transparent 70%);
+  filter: blur(36px);
+  animation: quoteLightIn 1.6s ease-out both;
+}
+
+@keyframes quoteLightIn {
+  from { opacity: 0; transform: translateX(-50%) scaleY(0.6); }
+  to   { opacity: 1; transform: translateX(-50%) scaleY(1); }
+}
+
+.quote-stage-vignette {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(70% 58% at 50% 46%, transparent 0%, rgba(0, 0, 0, 0.6) 80%, rgba(0, 0, 0, 0.92) 100%);
+}
+
+.quote-stage-close {
+  position: fixed;
+  top: 24px;
+  right: 28px;
+  z-index: 3;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-light);
   border: 1px solid var(--border-light);
-  animation: modalScaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  background: rgba(255, 255, 255, 0.03);
+  animation: quoteFadeUp 0.8s ease-out 0.9s both;
+}
+
+.quote-stage-close:hover {
+  color: var(--text-main);
+  border-color: var(--border-med);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* 내용 — 화면 가운데를 넉넉히 차지 */
+.quote-stage-inner {
+  position: relative;
+  z-index: 2;
+  width: min(1180px, 100%);
+  min-height: 100vh;
+  padding: 84px clamp(24px, 6vw, 80px) 56px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
 }
 
 .quote-badge-container {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 24px;
+  justify-content: center;
+  gap: 14px;
+  margin-bottom: clamp(28px, 5vh, 56px);
+  animation: quoteFadeUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both;
 }
 
 .quote-badge {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 6px 14px;
+  gap: 9px;
+  padding: 9px 20px;
   border-radius: 9999px;
-  background: rgba(251, 113, 133, 0.12);
-  color: #fda4af;
-  font-size: 0.82rem;
+  background: rgba(233, 196, 106, 0.12);
+  border: 1px solid var(--gold-line);
+  color: var(--gold-300);
+  font-size: 0.9rem;
   font-weight: 700;
+  letter-spacing: 0.02em;
 }
+
+.quote-badge svg { color: #fb7185; }
 
 .quote-tag {
-  font-size: 0.82rem;
-  color: var(--text-light);
+  font-size: 0.9rem;
   font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--text-light);
 }
 
+/* 멘트 본문 */
 .quote-content-box {
   position: relative;
-  padding: 12px 0 28px;
-}
-
-.quote-icon-decor {
-  width: 48px;
-  height: 48px;
-  color: rgba(233, 196, 106, 0.16);
-  position: absolute;
-  top: -10px;
-  left: -8px;
-  z-index: 0;
-  opacity: 0.5;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0;
 }
 
 .quote-main-text {
-  font-size: 1.55rem;
-  font-weight: 800;
-  line-height: 1.45;
-  color: var(--text-main);
   position: relative;
-  z-index: 1;
-  letter-spacing: -0.02em;
-  margin-bottom: 12px;
+  font-size: clamp(1.7rem, 4.6vw, 3.9rem);
+  font-weight: 800;
+  line-height: 1.34;
+  letter-spacing: -0.025em;
+  color: var(--text-main);
+  text-shadow: 0 4px 40px rgba(0, 0, 0, 0.85);
+  margin: 0 auto;
+  max-width: 20ch;
+  word-break: keep-all;
+  animation: quoteTextIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
 }
+
+@keyframes quoteTextIn {
+  from { opacity: 0; transform: translateY(24px) scale(1.04); filter: blur(12px); }
+  to   { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+}
+
+/* 큰 따옴표는 장식으로 — 본문 정렬에 영향 주지 않게 */
+.quote-mark {
+  color: var(--gold-400);
+  opacity: 0.55;
+  font-weight: 700;
+}
+
+.quote-mark-open { margin-right: 0.04em; }
+.quote-mark-close { margin-left: 0.04em; }
 
 .quote-sub-text {
-  font-size: 0.98rem;
+  font-size: clamp(0.95rem, 1.55vw, 1.32rem);
+  font-weight: 500;
+  line-height: 1.7;
   color: var(--text-muted);
-  line-height: 1.6;
-  position: relative;
-  z-index: 1;
+  margin: clamp(20px, 3.2vh, 34px) auto 0;
+  max-width: 44ch;
+  word-break: keep-all;
+  animation: quoteFadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) 0.75s both;
 }
 
+@keyframes quoteFadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.quote-divider {
+  width: min(460px, 70%);
+  height: 1px;
+  margin: clamp(36px, 6vh, 68px) auto clamp(28px, 4.5vh, 48px);
+  background: linear-gradient(90deg, transparent, var(--gold-line) 24%, rgba(233, 196, 106, 0.62) 50%, var(--gold-line) 76%, transparent);
+  transform: scaleX(0);
+  animation: quoteDividerDraw 1.1s cubic-bezier(0.16, 1, 0.3, 1) 1s both;
+}
+
+@keyframes quoteDividerDraw {
+  from { transform: scaleX(0); opacity: 0; }
+  to   { transform: scaleX(1); opacity: 1; }
+}
+
+/* 하단 조작부 */
 .quote-modal-footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-top: 1px solid var(--border-light);
-  padding-top: 20px;
-  margin-top: 12px;
+  gap: 20px;
+  flex-wrap: wrap;
+  animation: quoteFadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) 1.2s both;
 }
 
 .quote-footer-left {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 }
 
 .btn-icon-text {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
 }
 
-.btn-start-reveal {
-  padding: 12px 24px;
-  font-size: 1rem;
+.btn-primary.btn-start-reveal {
+  padding: 18px 46px;
+  font-size: 1.12rem;
   font-weight: 800;
-  border-radius: var(--radius-lg);
-  box-shadow: 0 4px 16px rgba(79, 70, 229, 0.4);
+  border-radius: 9999px;
+  letter-spacing: 0.01em;
+  box-shadow: 0 14px 40px -10px rgba(233, 196, 106, 0.62);
 }
 
-.btn-start-reveal:hover {
+.btn-primary.btn-start-reveal:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(79, 70, 229, 0.5);
+  box-shadow: 0 20px 50px -10px rgba(233, 196, 106, 0.8);
 }
 
+/* 직접 입력 폼 */
 .custom-quote-form {
   position: relative;
   z-index: 2;
+  width: min(760px, 100%);
+  margin: 0 auto;
+  text-align: left;
 }
 
 .custom-quote-input {
   width: 100%;
-  padding: 12px;
-  border: 1px solid var(--primary-500);
-  border-radius: var(--radius-md);
-  font-size: 1rem;
-  line-height: 1.5;
+  padding: 18px 20px;
+  border: 1px solid var(--gold-line);
+  border-radius: var(--radius-lg);
+  font-size: clamp(1rem, 1.8vw, 1.35rem);
+  font-weight: 600;
+  line-height: 1.6;
   outline: none;
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+  resize: vertical;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-main);
+  box-shadow: 0 0 0 4px rgba(233, 196, 106, 0.1);
 }
 
 .custom-quote-actions {
   display: flex;
   justify-content: flex-end;
   gap: 8px;
-  margin-top: 8px;
+  margin-top: 12px;
 }
 
 .btn-sm {
-  padding: 6px 12px;
-  font-size: 0.8rem;
+  padding: 8px 16px;
+  font-size: 0.85rem;
+}
+
+/* 좁은 화면 / 낮은 화면 */
+@media (max-width: 720px) {
+  .quote-stage-inner { padding: 76px 20px 40px; }
+  .quote-main-text { max-width: 16ch; }
+  .quote-modal-footer { justify-content: center; }
+  .quote-footer-left { order: 2; }
+  .quote-footer-right { order: 1; width: 100%; display: flex; justify-content: center; }
+  .btn-start-reveal { width: 100%; justify-content: center; }
+}
+
+@media (max-height: 560px) {
+  .quote-stage-inner { padding-top: 60px; padding-bottom: 28px; }
+  .quote-divider { margin-top: 22px; margin-bottom: 20px; }
 }
 
 /* =========================================================
@@ -1663,7 +1796,8 @@ input, select, textarea {
 
   .app-container::after,
   .classroom-board-container::before,
-  .intro-stage {
+  .intro-stage,
+  .quote-stage {
     display: none !important;
   }
 
@@ -2231,29 +2365,10 @@ input, select, textarea {
   -webkit-backdrop-filter: blur(8px);
 }
 
-.modal-dialog,
-.quote-modal-card {
+.modal-dialog {
   background: linear-gradient(180deg, var(--surface-2) 0%, #101019 100%);
   border: 1px solid var(--border-med);
   box-shadow: var(--shadow-xl), 0 0 0 1px rgba(233, 196, 106, 0.06);
-}
-
-/* 교훈 멘트 = 본편 직전 타이틀 카드 */
-.quote-modal-card {
-  background:
-    radial-gradient(80% 60% at 50% 0%, rgba(233, 196, 106, 0.12) 0%, transparent 60%),
-    linear-gradient(180deg, #14141f 0%, #0a0a11 100%);
-}
-
-.quote-badge {
-  background: rgba(233, 196, 106, 0.14);
-  border: 1px solid var(--gold-line);
-  color: var(--gold-300);
-}
-
-.quote-main-text {
-  color: var(--text-main);
-  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.8);
 }
 
 /* 입력 요소 */
@@ -2291,12 +2406,19 @@ select {
 
 .w-3 { width: 12px; }
 .h-3 { height: 12px; }
+.w-3\.5 { width: 14px; }
+.h-3\.5 { height: 14px; }
 .w-4 { width: 16px; }
 .h-4 { height: 16px; }
 .w-5 { width: 20px; }
 .h-5 { height: 20px; }
 
 .shrink-0 { flex-shrink: 0; }
+.text-center { text-align: center; }
+.text-xs { font-size: 0.75rem; line-height: 1.4; }
+.text-sm { font-size: 0.875rem; line-height: 1.5; }
+.font-medium { font-weight: 500; }
+.font-mono { font-family: ui-monospace, SFMono-Regular, 'Cascadia Mono', Consolas, monospace; }
 .fill-current { fill: currentColor; }
 .font-semibold { font-weight: 600; }
 
