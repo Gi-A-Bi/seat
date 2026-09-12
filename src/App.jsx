@@ -13,6 +13,7 @@ import {
   AlertCircle
 } from 'lucide-react';
 
+import IntroScreen from './components/IntroScreen';
 import Navbar from './components/Navbar';
 import ClassroomBoard from './components/ClassroomBoard';
 import StudentManagerModal from './components/StudentManagerModal';
@@ -28,6 +29,9 @@ import { generateSeatAssignments } from './utils/seatAlgorithm';
 
 export default function App() {
   const [data, setData] = useState(() => getInitialData());
+
+  // 인트로(타이틀 시퀀스) 노출 여부 — 입장 후에는 본 화면으로 전환
+  const [showIntro, setShowIntro] = useState(true);
   const [activeModal, setActiveModal] = useState(null); // 'students' | 'layout' | 'secretRules' | 'quote' | null
   
   // 교사용 모드(true) vs 학생 발표 모드(false)
@@ -313,8 +317,19 @@ export default function App() {
     ? students.find(s => s.id === currentAssignments[selectedSeatForSwap])
     : null;
 
+  if (showIntro) {
+    return (
+      <IntroScreen
+        className={className}
+        studentCount={students.length}
+        seatCount={activeSeats.length}
+        onEnter={() => setShowIntro(false)}
+      />
+    );
+  }
+
   return (
-    <div className="app-container">
+    <div className="app-container app-entered">
       {/* 내비게이션 바 */}
       <Navbar
         className={className}
